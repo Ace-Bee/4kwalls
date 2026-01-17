@@ -9,8 +9,9 @@
 - **Performance First**: 
     - **Low Graphics Mode**: Automatically reduces GPU load by disabling complex blurs and WebGL on low-end devices.
     - **Image Optimization**: Smart thumbnail caching via `wsrv.nl` and optimization for different viewports.
-- **Immersive Mode**: Distraction-free wallpaper viewing experience.
-- **Social & Community**: User accounts, collections, favorites, and social sharing capabilities.
+- **Mobile-First Experience**: Fully responsive design with touch gestures (swipe-to-close modals), bottom navigation, and haptic feedback.
+- **Immersive Mode**: Zen-like, distraction-free wallpaper feed that serves a fresh, random selection on every visit.
+- **Social & Community**: User accounts, collections, favorites (with optimistic UI updates), and social sharing capabilities.
 
 ## 🛠️ Tech Stack
 
@@ -48,6 +49,7 @@
 
    | Variable | Description |
    | :--- | :--- |
+   | `NEXT_PUBLIC_SITE_URL` | Canonical URL for production (e.g. `https://4kwalls.com`) |
    | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase Project URL |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase Anon Key |
    | `SUPABASE_SERVICE_ROLE_KEY` | Supabase Service Role (for admin tasks) |

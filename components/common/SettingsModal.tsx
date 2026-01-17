@@ -24,7 +24,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const { user, signOut, updateProfile, updatePassword, signInWithEmail } = useAuth();
     const queryClient = useQueryClient();
     const { showBackground, setShowBackground, reduceBlur, setReduceBlur } = useGraphics();
-    const { hapticsEnabled, toggleHaptics } = useHaptics();
+    const { hapticsEnabled, toggleHaptics, isSupported } = useHaptics();
     const { accentColor, setAccentColor } = useTheme();
     const [activeTab, setActiveTab] = useState<Tab>('profile');
     const [isLoading, setIsLoading] = useState(false);
@@ -334,17 +334,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                                         isEnabled={!reduceBlur}
                                         onToggle={() => setReduceBlur(!reduceBlur)}
                                     />
+                                    {isSupported && (
+                                        <ToggleCard
+                                            title="Haptic Feedback"
+                                            description="Vibrations on interaction"
+                                            isEnabled={hapticsEnabled}
+                                            onToggle={toggleHaptics}
+                                        />
+                                    )}
                                 </div>
                             )}
 
                             {activeTab === 'personalization' && (
                                 <div className="space-y-6">
-                                    <ToggleCard
-                                        title="Haptic Feedback"
-                                        description="Vibrations on interaction"
-                                        isEnabled={hapticsEnabled}
-                                        onToggle={toggleHaptics}
-                                    />
+
 
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-400 mb-4">Accent Color</h3>

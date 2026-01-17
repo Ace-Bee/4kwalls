@@ -47,6 +47,8 @@ export const STORAGE_KEYS = {
     GRAPHICS_REDUCE_BLUR: 'graphics_reduceBlur',
     /** Login success flag for post-redirect toast */
     LOGIN_SUCCESS: 'login_success',
+    /** Haptics enabled state */
+    HAPTICS_ENABLED: 'haptics_enabled',
 } as const;
 
 // ============================================
@@ -83,6 +85,25 @@ export const ANIMATION = {
     HERO_DELAY_2: 0.2,
     HERO_DELAY_3: 0.3,
     HERO_DELAY_BG: 0.5,
+} as const;
+
+// ============================================
+// Haptic Feedback Patterns (ms)
+// ============================================
+
+export const HAPTIC_PATTERNS = {
+    /** Light tap for normal interactions */
+    LIGHT: 15,
+    /** Medium feedback for significant actions */
+    MEDIUM: 50,
+    /** Heavy feedback for errors or destructive actions */
+    HEAVY: 80,
+    /** Success pattern: ta-da! */
+    SUCCESS: [50, 50, 50],
+    /** Warning pattern: uh-oh */
+    WARNING: [30, 50, 30],
+    /** Error pattern: double bump */
+    ERROR: [50, 100, 50, 50],
 } as const;
 
 // ============================================

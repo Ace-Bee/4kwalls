@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Share2, Check, Loader2 } from 'lucide-react';
 import { cn, glassIcon, getProxiedImageUrl } from '@/utils/helpers';
 import { notifySuccess, notifyError } from '@/components/common/Notifications';
+import { useHaptics } from '@/components/providers/HapticsProvider';
 import { ANIMATION } from '@/lib/constants';
 
 interface ShareButtonProps {
@@ -18,10 +19,13 @@ export function ShareButton({ url, title = 'Check out this 4K Wallpaper!', image
     const [isCopied, setIsCopied] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const { triggerHaptic } = useHaptics();
+
     const handleShare = async (e: React.MouseEvent) => {
         e.stopPropagation();
 
         if (typeof navigator !== 'undefined' && navigator.share) {
+            triggerHaptic('light');
             try {
                 let shareData: ShareData = {
                     title: '4K Walls',
@@ -53,10 +57,12 @@ export function ShareButton({ url, title = 'Check out this 4K Wallpaper!', image
 
                 setIsLoading(false);
                 await navigator.share(shareData);
+                triggerHaptic('success');
                 return;
 
             } catch (error) {
                 setIsLoading(false);
+                triggerHaptic('error');
                 if ((error as Error).name !== 'AbortError') {
                     console.error('Error sharing:', error);
                     notifyError('Share failed: ' + (error as Error).message);
@@ -67,6 +73,7 @@ export function ShareButton({ url, title = 'Check out this 4K Wallpaper!', image
         }
 
         setIsLoading(false);
+        triggerHaptic('light');
 
         try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -94,9 +101,11 @@ export function ShareButton({ url, title = 'Check out this 4K Wallpaper!', image
                 }
             }
 
+            triggerHaptic('success');
             setTimeout(() => setIsCopied(false), ANIMATION.COPY_FEEDBACK);
         } catch (err) {
             console.error('Copy failed:', err);
+            triggerHaptic('error');
             if (typeof window !== 'undefined' && !window.isSecureContext) {
                 notifyError('Sharing requires HTTPS (or use localhost).');
             } else {
