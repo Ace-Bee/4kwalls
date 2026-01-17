@@ -21,11 +21,38 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         };
     }
 
+    const title = `${wallpaper.name} in 4K - 4kwalls`;
+    const description = `Download ${wallpaper.name} wallpaper in ${wallpaper.width}x${wallpaper.height} 4K resolution. Premium ${wallpaper.format} wallpaper for desktop, iPhone, and Android.`;
+    const url = `${getSiteUrl()}/wallpapers/${wallpaper.id}`;
+    const images = [
+        {
+            url: getModalImageUrl(wallpaper.image_url),
+            width: 1200,
+            height: 630,
+            alt: wallpaper.name,
+        },
+    ];
+
     return {
-        title: `${wallpaper.name} - 4K Walls`,
-        description: `Download ${wallpaper.name} in 4K resolution. High quality ${wallpaper.format} wallpaper for your desktop and mobile.`,
+        title,
+        description,
         openGraph: {
-            images: [getModalImageUrl(wallpaper.image_url)],
+            title,
+            description,
+            url,
+            siteName: '4kwalls',
+            images,
+            locale: 'en_US',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [images[0].url],
+        },
+        alternates: {
+            canonical: url,
         },
     };
 }
