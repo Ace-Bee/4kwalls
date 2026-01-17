@@ -72,6 +72,11 @@
 ├── (seo)/              # SEO Utilities
 │   ├── robots.ts       # Robots.txt generator
 │   └── sitemap.ts      # Sitemap generator
+├── auth/
+│   ├── callback/
+│   │   └── route.ts    # OAuth/Email code exchange handler
+│   └── auth-code-error/
+│       └── page.tsx    # Auth error fallback page
 ├── favorites/
 │   └── page.tsx        # Favorites grid page
 ├── immersive/
