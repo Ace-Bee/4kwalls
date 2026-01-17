@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import "@fontsource/jetbrains-mono";
 import "./globals.css";
 import QueryProvider from '@/components/providers/QueryProvider';
@@ -41,6 +42,7 @@ export default function RootLayout({
                 </div>
                 <Sidebar />
                 <Toaster richColors position="top-center" toastOptions={{ style: { zIndex: 99999 } }} />
+                <SpeedInsights />
               </HapticsProvider>
             </ThemeProvider>
           </GraphicsProvider>
