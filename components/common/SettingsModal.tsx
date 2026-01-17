@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { deleteAccount, deleteAllFavorites } from '@/utils/auth-actions';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
+import { Z_INDEX, LIMITS } from '@/lib/constants';
 
 interface SettingsModalProps {
     isOpen: boolean;
@@ -57,8 +58,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             notifyError('New passwords do not match');
             return;
         }
-        if (newPassword.length < 6) {
-            notifyError('Password must be at least 6 characters');
+        if (newPassword.length < LIMITS.MIN_PASSWORD_LENGTH) {
+            notifyError(`Password must be at least ${LIMITS.MIN_PASSWORD_LENGTH} characters`);
             return;
         }
 
@@ -85,7 +86,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div
+                    className="fixed inset-0 flex items-center justify-center p-4"
+                    style={{ zIndex: Z_INDEX.OVERLAY_MODAL }}
+                >
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -235,7 +239,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                                                 onChange={(e) => setDisplayName(e.target.value)}
                                                 className={glassInput()}
                                                 placeholder="Your Name"
-                                                maxLength={30}
+                                                maxLength={LIMITS.MAX_DISPLAY_NAME_LENGTH}
                                             />
                                         </div>
                                     </div>
@@ -282,7 +286,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                                                     className={glassInput()}
                                                     placeholder="••••••••"
                                                     required
-                                                    minLength={6}
+                                                    minLength={LIMITS.MIN_PASSWORD_LENGTH}
                                                 />
                                             </div>
                                         </div>

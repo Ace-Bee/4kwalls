@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Share2, Check, Loader2 } from 'lucide-react';
 import { cn, glassIcon, getProxiedImageUrl } from '@/utils/helpers';
 import { notifySuccess, notifyError } from '@/components/common/Notifications';
+import { ANIMATION } from '@/lib/constants';
 
 interface ShareButtonProps {
     url: string;
@@ -93,7 +94,7 @@ export function ShareButton({ url, title = 'Check out this 4K Wallpaper!', image
                 }
             }
 
-            setTimeout(() => setIsCopied(false), 2000);
+            setTimeout(() => setIsCopied(false), ANIMATION.COPY_FEEDBACK);
         } catch (err) {
             console.error('Copy failed:', err);
             if (typeof window !== 'undefined' && !window.isSecureContext) {

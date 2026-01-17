@@ -11,6 +11,8 @@ import { motion } from 'framer-motion';
 import { AuthModal } from './AuthModal';
 import { notifySuccess } from '@/components/common/Notifications';
 
+import { Z_INDEX } from '@/lib/constants';
+
 export function Header() {
     const pathname = usePathname();
     const { user, loading } = useAuth();
@@ -36,8 +38,9 @@ export function Header() {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
+                style={{ zIndex: Z_INDEX.HEADER }}
                 className={cn(
-                    "sticky top-0 z-50 w-full max-w-[1800px] mx-auto",
+                    "sticky top-0 w-full max-w-[1800px] mx-auto",
                     "flex flex-row items-center justify-between",
                     "py-3 px-3 md:py-6 md:px-12",
                     "pointer-events-none transition-all duration-300"

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { RefreshCw } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 import { useHaptics } from '@/components/providers/HapticsProvider';
+import { ANIMATION } from '@/lib/constants';
 
 interface RefreshButtonProps {
     onRefresh: () => void;
@@ -28,9 +29,9 @@ export function RefreshButton({ onRefresh, isLoading }: RefreshButtonProps) {
             }}
             transition={{
                 rotate: isLoading
-                    ? { duration: 1, repeat: Infinity, ease: "linear" }
+                    ? { duration: ANIMATION.SPIN_SLOW, repeat: Infinity, ease: "linear" }
                     : { duration: 0 },
-                default: { duration: 0.3 }
+                default: { duration: ANIMATION.MEDIUM }
             }}
             whileHover={isLoading ? {} : { scale: 1.1 }}
             whileTap={isLoading ? {} : { scale: 0.9 }}

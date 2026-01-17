@@ -5,6 +5,8 @@ import { LogIn, CheckCircle, AlertCircle, Info, AlertTriangle, Trash2, Loader2, 
 import { cn, glass, glassInput } from '@/utils/helpers';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Z_INDEX } from '@/lib/constants';
+
 
 const glassToastClass = cn(
     glass(),
@@ -165,7 +167,10 @@ export function DeleteConfirmationModal({ isOpen, onClose, onConfirm, requiresPa
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <div
+                    className="fixed inset-0 flex items-center justify-center p-4"
+                    style={{ zIndex: Z_INDEX.CONFIRMATION_MODAL }}
+                >
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -269,7 +274,10 @@ export function DeleteFavoritesModal({ isOpen, onClose, onConfirm }: DeleteFavor
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <div
+                    className="fixed inset-0 flex items-center justify-center p-4"
+                    style={{ zIndex: Z_INDEX.CONFIRMATION_MODAL }}
+                >
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

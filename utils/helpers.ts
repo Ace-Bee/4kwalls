@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { IMAGE_CONFIG } from '@/lib/constants';
 
 /**
  * Simple className merger utility
@@ -137,6 +138,8 @@ export function getProxiedImageUrl(url: string): string {
     }
 }
 
+
+
 interface ThumbnailOptions {
     /** Width in pixels (default: 500) */
     width?: number;
@@ -152,7 +155,7 @@ interface ThumbnailOptions {
 export function getThumbnailUrl(url: string, options: ThumbnailOptions = {}): string {
     if (!url) return '';
 
-    const { width = 500, quality = 80 } = options;
+    const { width = IMAGE_CONFIG.THUMBNAIL_WIDTH, quality = IMAGE_CONFIG.THUMBNAIL_QUALITY } = options;
 
     try {
         // wsrv.nl expects the full URL as the 'url' parameter
@@ -175,8 +178,9 @@ export function getThumbnailUrl(url: string, options: ThumbnailOptions = {}): st
  * Larger width (1200px) for detailed viewing while still optimizing.
  */
 export function getModalImageUrl(url: string): string {
-    return getThumbnailUrl(url, { width: 1200, quality: 85 });
+    return getThumbnailUrl(url, { width: IMAGE_CONFIG.MODAL_WIDTH, quality: IMAGE_CONFIG.MODAL_QUALITY });
 }
+
 
 /**
  * Helper to get the canonical site URL in both Dev and Prod environment

@@ -8,41 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { cn, glass, glassIcon, getThumbnailUrl } from '@/utils/helpers';
 import { supabase, Wallpaper, getCategoryWallpapers } from '@/lib/supabase';
 import { ImageModal } from '@/components/wallpapers/ImageModal';
-
-const CATEGORIES = [
-    { id: 'anime', name: 'Anime', emoji: '🎌' },
-    { id: 'cyberpunk', name: 'Cyberpunk', emoji: '🤖' },
-    { id: 'landscape', name: 'Landscape', emoji: '🏞️' },
-    { id: 'neon city', name: 'Neon City', emoji: '🌃' },
-    { id: 'minimalist', name: 'Minimalist', emoji: '✨' },
-    { id: 'space', name: 'Space', emoji: '�' },
-    { id: 'dark fantasy', name: 'Dark Fantasy', emoji: '🐉' },
-    { id: 'abstract', name: 'Abstract', emoji: '🎨' },
-    { id: 'car', name: 'Car', emoji: '🚗' },
-    { id: 'nature', name: 'Nature', emoji: '🌿' },
-    { id: 'animal', name: 'Animal', emoji: '🦁' },
-    { id: 'gaming', name: 'Gaming', emoji: '�' },
-    { id: 'horror', name: 'Horror', emoji: '👻' },
-    { id: 'skull', name: 'Skull', emoji: '💀' },
-    { id: 'robot', name: 'Robot', emoji: '🦾' },
-    { id: 'forest', name: 'Forest', emoji: '�' },
-    { id: 'mountain', name: 'Mountain', emoji: '🏔️' },
-    { id: 'ocean', name: 'Ocean', emoji: '🌊' },
-    { id: 'pixel art', name: 'Pixel Art', emoji: '👾' },
-    { id: 'street photography', name: 'Street', emoji: '🏙️' },
-    { id: 'sunset', name: 'Sunset', emoji: '🌅' },
-    { id: 'flower', name: 'Flower', emoji: '🌸' },
-    { id: 'cat', name: 'Cat', emoji: '🐱' },
-    { id: 'dog', name: 'Dog', emoji: '�' },
-    { id: 'sword', name: 'Sword', emoji: '⚔️' },
-    { id: 'warrior', name: 'Warrior', emoji: '🗡️' },
-    { id: 'architecture', name: 'Architecture', emoji: '�️' },
-    { id: 'black and white', name: 'B&W', emoji: '⚫' },
-    { id: 'rain', name: 'Rain', emoji: '🌧️' },
-    { id: 'snow', name: 'Snow', emoji: '❄️' },
-    { id: 'vintage', name: 'Vintage', emoji: '📜' },
-    { id: 'sci-fi', name: 'Sci-Fi', emoji: '�' },
-];
+import { Z_INDEX, WALLPAPER_CATEGORIES, INFINITE_SCROLL, STALE_TIME, IMAGE_CONFIG } from '@/lib/constants';
 
 interface CategoryModalProps {
     isOpen: boolean;
@@ -63,7 +29,10 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
         <>
             <AnimatePresence>
                 {isOpen && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4">
+                    <div
+                        className="fixed inset-0 flex items-center justify-center p-0 md:p-4"
+                        style={{ zIndex: Z_INDEX.OVERLAY_MODAL }}
+                    >
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -88,7 +57,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                             <div className="flex items-center justify-between p-4 md:p-6 border-b border-white/10">
                                 <h2 className="text-xl md:text-2xl font-bold text-white">
                                     {selectedCategory
-                                        ? CATEGORIES.find(c => c.id === selectedCategory)?.name
+                                        ? WALLPAPER_CATEGORIES.find(c => c.id === selectedCategory)?.name
                                         : 'Browse Categories'}
                                 </h2>
                                 <div className="flex items-center gap-2">
@@ -118,7 +87,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                             {!selectedCategory ? (
                                 <div className="flex-1 overflow-y-auto p-4 md:p-6">
                                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                                        {CATEGORIES.map((category) => (
+                                        {WALLPAPER_CATEGORIES.map((category) => (
                                             <button
                                                 key={category.id}
                                                 onClick={() => setSelectedCategory(category.id)}
@@ -168,16 +137,16 @@ function CategoryFeed({ category, onWallpaperClick }: CategoryFeedProps) {
     } = useInfiniteQuery({
         queryKey: ['categoryWallpapers', category, seed],
         queryFn: async ({ pageParam = 0 }) => {
-            const limit = 20;
+            const limit = INFINITE_SCROLL.BATCH_SIZE;
             const offset = pageParam * limit;
 
             return getCategoryWallpapers(category, seed, offset, limit);
         },
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
-            return lastPage.length >= 20 ? allPages.length : undefined;
+            return lastPage.length >= INFINITE_SCROLL.BATCH_SIZE ? allPages.length : undefined;
         },
-        staleTime: 1000 * 60 * 5,
+        staleTime: STALE_TIME.CATEGORIES,
     });
 
     const allWallpapers = data?.pages.flat() || [];
@@ -229,7 +198,7 @@ function CategoryFeed({ category, onWallpaperClick }: CategoryFeedProps) {
                             onClick={() => onWallpaperClick(wallpaper)}
                         >
                             <Image
-                                src={getThumbnailUrl(wallpaper.image_url, { width: 400 })}
+                                src={getThumbnailUrl(wallpaper.image_url, { width: IMAGE_CONFIG.THUMBNAIL_WIDTH })}
                                 alt={wallpaper.name}
                                 fill
                                 className="object-cover"

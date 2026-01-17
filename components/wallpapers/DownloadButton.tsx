@@ -8,6 +8,7 @@ import { handleDownload } from '@/utils/download';
 import { notifyError, notifySuccess } from '@/components/common/Notifications';
 import { incrementDownloadCount } from './WallpaperInfo';
 import { useHaptics } from '@/components/providers/HapticsProvider';
+import { ANIMATION } from '@/lib/constants';
 
 interface DownloadButtonProps {
     wallpaperId: number;
@@ -41,7 +42,7 @@ export function DownloadButton({
             setIsDownloading(true);
             await incrementDownloadCount(wallpaperId);
             triggerHaptic('success');
-            setTimeout(() => setIsDownloading(false), 1500);
+            setTimeout(() => setIsDownloading(false), ANIMATION.DOWNLOAD_SPINNER_DELAY);
             return;
         }
 
@@ -78,7 +79,7 @@ export function DownloadButton({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: ANIMATION.FAST }}
                     >
                         <Loader2 size={variant === 'button' ? 18 : 16} className="animate-spin" />
                     </motion.div>
@@ -88,7 +89,7 @@ export function DownloadButton({
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.5 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: ANIMATION.FAST }}
                     >
                         <Download size={variant === 'button' ? 18 : 16} />
                     </motion.div>
@@ -106,9 +107,7 @@ export function DownloadButton({
         return (
             <a
                 href={getProxiedImageUrl(imageUrl)}
-                download
-                target="_blank"
-                rel="noopener noreferrer"
+                download={filename}
                 onClick={handleClick}
                 className={cn('h-10 px-4', baseClasses)}
             >

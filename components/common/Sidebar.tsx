@@ -11,6 +11,7 @@ import { SettingsModal } from './SettingsModal';
 import { CategoryModal } from './CategoryModal';
 import { useNotificationSettings } from '@/components/common/Notifications';
 import { useHaptics } from '@/components/providers/HapticsProvider';
+import { Z_INDEX } from '@/lib/constants';
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -50,7 +51,8 @@ export function Sidebar() {
                 <>
                     {!isHome && (
                         <div
-                            className="hidden md:block fixed right-0 top-1/2 -translate-y-1/2 h-[60vh] w-8 z-[49] bg-transparent"
+                            className="hidden md:block fixed right-0 top-1/2 -translate-y-1/2 h-[60vh] w-8 bg-transparent"
+                            style={{ zIndex: Z_INDEX.SIDEBAR_TRIGGER }}
                             onMouseEnter={() => setIsHovered(true)}
                         />
                     )}
@@ -60,7 +62,8 @@ export function Sidebar() {
                         animate={isVisible ? "visible" : "hidden"}
                         variants={variants}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="hidden md:block fixed right-6 top-1/2 -translate-y-1/2 z-[50]"
+                        className="hidden md:block fixed right-6 top-1/2 -translate-y-1/2"
+                        style={{ zIndex: Z_INDEX.SIDEBAR }}
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                     >
@@ -111,7 +114,10 @@ export function Sidebar() {
             )}
 
             {!isImmersive && (
-                <div className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-[50]">
+                <div
+                    className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2"
+                    style={{ zIndex: Z_INDEX.SIDEBAR }}
+                >
                     <nav className={cn(
                         glassNavbar(),
                         'backdrop-blur-none md:backdrop-blur-md bg-black/80',

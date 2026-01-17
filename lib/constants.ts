@@ -8,6 +8,7 @@
 // ============================================
 
 export const STALE_TIME = {
+    DEFAULT: 60 * 1000,
     /** Auth state rarely changes without explicit user action */
     AUTH: Infinity,
     /** Favorites can be stale for 5 minutes */
@@ -15,7 +16,8 @@ export const STALE_TIME = {
     /** Wallpaper data is stable */
     WALLPAPERS: Infinity,
     /** Favorite wallpaper details */
-    FAVORITE_WALLPAPERS: 5 * 60 * 1000,
+    CATEGORIES: Infinity,
+    ZERO: 0,
 } as const;
 
 // ============================================
@@ -66,16 +68,21 @@ export const IMAGE_CONFIG = {
 // ============================================
 
 export const ANIMATION = {
-    /** Standard transition duration */
-    FAST: 200,
-    /** Medium transition duration */
-    MEDIUM: 300,
-    /** Slow/Emphasized transitions */
-    SLOW: 500,
-    /** Debounce delay for saving viewed IDs */
+    FAST: 0.2,
+    MEDIUM: 0.3,
+    SLOW: 0.5,
     DEBOUNCE_SAVE: 300,
-    /** Delay before stopping download spinner (for link variant) */
     DOWNLOAD_SPINNER_DELAY: 1500,
+    COPY_FEEDBACK: 2000,
+    REVOKE_OBJECT_URL: 100,
+    SPIN_SLOW: 1,
+    HERO_REVEAL: 0.6,
+    HERO_CONTENT: 0.8,
+    HERO_BACKGROUND: 1.5,
+    HERO_DELAY_1: 0.1,
+    HERO_DELAY_2: 0.2,
+    HERO_DELAY_3: 0.3,
+    HERO_DELAY_BG: 0.5,
 } as const;
 
 // ============================================
@@ -104,18 +111,19 @@ export const Z_INDEX = {
     BACKGROUND: 0,
     /** Card hover state */
     CARD_HOVER: 10,
+    CARD_CONTENT: 20,
     /** Sidebar trigger zone */
     SIDEBAR_TRIGGER: 49,
     /** Sidebar panel */
     SIDEBAR: 50,
     /** Header navigation */
     HEADER: 50,
-    /** Image Modal */
-    MODAL: 60,
-    /** Auth/Settings Modals */
+    /** Category Modal / Overlay Modals */
     OVERLAY_MODAL: 100,
+    /** Image Modal (must be above overlay modals) */
+    IMAGE_MODAL: 110,
     /** Confirmation dialogs */
-    CONFIRMATION_MODAL: 110,
+    CONFIRMATION_MODAL: 120,
 } as const;
 
 // ============================================
@@ -123,9 +131,36 @@ export const Z_INDEX = {
 // ============================================
 
 export const WALLPAPER_CATEGORIES = [
-    "Anime", "Cyberpunk", "Landscape", "Neon City", "Minimalist", "Space",
-    "Dark Fantasy", "Abstract", "Car", "Nature", "Animal", "Gaming",
-    "Horror", "Skull", "Robot", "Forest", "Mountain", "Ocean", "Pixel Art",
-    "Street Photography", "Sunset", "Flower", "Cat", "Dog", "Sword", "Warrior",
-    "Architecture", "Black and White", "Rain", "Snow", "Vintage", "Sci-Fi"
+    { id: 'anime', name: 'Anime', emoji: '🎌' },
+    { id: 'cyberpunk', name: 'Cyberpunk', emoji: '🤖' },
+    { id: 'landscape', name: 'Landscape', emoji: '🏞️' },
+    { id: 'neon city', name: 'Neon City', emoji: '🌃' },
+    { id: 'minimalist', name: 'Minimalist', emoji: '✨' },
+    { id: 'space', name: 'Space', emoji: '🌌' },
+    { id: 'dark fantasy', name: 'Dark Fantasy', emoji: '🐉' },
+    { id: 'abstract', name: 'Abstract', emoji: '🎨' },
+    { id: 'car', name: 'Car', emoji: '🚗' },
+    { id: 'nature', name: 'Nature', emoji: '🌿' },
+    { id: 'animal', name: 'Animal', emoji: '🦁' },
+    { id: 'gaming', name: 'Gaming', emoji: '🎮' },
+    { id: 'horror', name: 'Horror', emoji: '👻' },
+    { id: 'skull', name: 'Skull', emoji: '💀' },
+    { id: 'robot', name: 'Robot', emoji: '🦾' },
+    { id: 'forest', name: 'Forest', emoji: '🌲' },
+    { id: 'mountain', name: 'Mountain', emoji: '🏔️' },
+    { id: 'ocean', name: 'Ocean', emoji: '🌊' },
+    { id: 'pixel art', name: 'Pixel Art', emoji: '👾' },
+    { id: 'street photography', name: 'Street', emoji: '🏙️' },
+    { id: 'sunset', name: 'Sunset', emoji: '🌅' },
+    { id: 'flower', name: 'Flower', emoji: '🌸' },
+    { id: 'cat', name: 'Cat', emoji: '🐱' },
+    { id: 'dog', name: 'Dog', emoji: '🐶' },
+    { id: 'sword', name: 'Sword', emoji: '⚔️' },
+    { id: 'warrior', name: 'Warrior', emoji: '🗡️' },
+    { id: 'architecture', name: 'Architecture', emoji: '🏗️' },
+    { id: 'black and white', name: 'B&W', emoji: '⚫' },
+    { id: 'rain', name: 'Rain', emoji: '🌧️' },
+    { id: 'snow', name: 'Snow', emoji: '❄️' },
+    { id: 'vintage', name: 'Vintage', emoji: '📜' },
+    { id: 'sci-fi', name: 'Sci-Fi', emoji: '👽' },
 ] as const;

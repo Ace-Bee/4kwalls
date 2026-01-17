@@ -6,6 +6,7 @@ import { X, Mail, Lock, Loader2, Key, } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
 import { notifySuccess } from '@/components/common/Notifications';
 import { cn, glass, glassInput } from '@/utils/helpers';
+import { Z_INDEX, LIMITS } from '@/lib/constants';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -38,8 +39,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 if (password !== confirmPassword) {
                     throw new Error("Passwords do not match");
                 }
-                if (password.length < 6) {
-                    throw new Error("Password must be at least 6 characters");
+                if (password.length < LIMITS.MIN_PASSWORD_LENGTH) {
+                    throw new Error(`Password must be at least ${LIMITS.MIN_PASSWORD_LENGTH} characters`);
                 }
                 const data = await signUpWithEmail(email, password);
                 if (data && !data.session) {
@@ -101,7 +102,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div
+                    className="fixed inset-0 flex items-center justify-center p-4"
+                    style={{ zIndex: Z_INDEX.OVERLAY_MODAL }}
+                >
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

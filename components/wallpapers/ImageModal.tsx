@@ -12,6 +12,8 @@ import { ShareButton } from './ShareButton';
 import { FavoriteButton } from './FavoriteButton';
 import { DoubleTapLikeOverlay } from './DoubleTapLikeOverlay';
 
+import { Z_INDEX } from '@/lib/constants';
+
 interface ImageModalProps {
     wallpaper: Wallpaper | null;
     onClose: () => void;
@@ -29,8 +31,9 @@ export function ImageModal({ wallpaper, onClose }: ImageModalProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    style={{ zIndex: Z_INDEX.IMAGE_MODAL }}
                     className={cn(
-                        "fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4",
+                        "fixed inset-0 flex items-center justify-center p-0 md:p-4",
                         "bg-black/95 backdrop-blur-xl"
                     )}
                     onClick={onClose}

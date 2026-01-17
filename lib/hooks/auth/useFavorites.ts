@@ -2,13 +2,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from './useAuth';
 import { notifySuccess, notifyError } from '@/components/common/Notifications';
+import { STALE_TIME } from '@/lib/constants';
 
 export function useFavorites() {
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const queryKey = ['favorites', user?.id];
 
-    // Fetch user's favorite wallpaper IDs
     const { data: favoriteIds = [] } = useQuery({
         queryKey,
         queryFn: async () => {
@@ -22,22 +22,15 @@ export function useFavorites() {
             return data.map((fav: { wallpaper_id: number }) => fav.wallpaper_id);
         },
         enabled: !!user,
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        staleTime: STALE_TIME.FAVORITES,
     });
 
-    // Toggle favorite mutation
     const toggleMut = useMutation({
         mutationFn: async (wallpaperId: number) => {
             if (!user) throw new Error("User not logged in");
             const isFavorite = favoriteIds.includes(wallpaperId);
 
             if (isFavorite) {
-                // Determine if we should delete or call RPC.
-                // Standard approach: delete from junction table + decrement count.
-                // We'll use RPC if provided, but for now assuming direct table manip + potential RPC for count.
-                // The prompt suggested calling RPC or direct table.
-                // Let's assume standard behavior:
-                // 1. Remove from user_favorites
                 const { error } = await supabase
                     .from('user_favorites')
                     .delete()
@@ -45,27 +38,12 @@ export function useFavorites() {
                     .eq('wallpaper_id', wallpaperId);
 
                 if (error) throw error;
-
-                // 2. Decrement count (RPC) - standard supabase database setup usually handles this via triggers,
-                // but user prompt explicitly mentioned `increment_fav`.
-                // We might need a `decrement_fav` RPC or just trust the trigger.
-                // Assuming `increment_fav` handles +1, we might need a manual table update for decrement if no RPC exists.
-                // Let's try to just update the count locally or assume trigger/RPC handling.
-                // Actually, let's call rpc decrement if it exists, otherwise manual update.
-                // For safety, let's stick to the prompt: "Remove from table and decrease fav_count".
-
-
-
             } else {
-                // Add to user_favorites
                 const { error } = await supabase
                     .from('user_favorites')
                     .insert({ user_id: user.id, wallpaper_id: wallpaperId });
 
                 if (error) throw error;
-
-                // Call RPC
-
             }
         },
         onMutate: async (wallpaperId) => {
@@ -73,7 +51,6 @@ export function useFavorites() {
 
             const previousFavorites = queryClient.getQueryData<number[]>(queryKey);
 
-            // Optimistically update
             queryClient.setQueryData<number[]>(queryKey, (old = []) => {
                 return old.includes(wallpaperId)
                     ? old.filter((id) => id !== wallpaperId)

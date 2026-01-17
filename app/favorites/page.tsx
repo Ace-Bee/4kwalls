@@ -1,7 +1,6 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
@@ -12,6 +11,7 @@ import { Header } from '@/components/common/Header';
 import { Card } from '@/components/wallpapers/Card';
 import { ImageModal } from '@/components/wallpapers/ImageModal';
 import { motion, AnimatePresence } from 'framer-motion';
+import { STALE_TIME } from '@/lib/constants';
 
 export default function FavoritesPage() {
     const { user, loading: authLoading } = useAuth();
@@ -19,25 +19,23 @@ export default function FavoritesPage() {
     const router = useRouter();
     const [selectedWallpaper, setSelectedWallpaper] = useState<Wallpaper | null>(null);
 
-    // Redirect guests
     useEffect(() => {
         if (!authLoading && !user) {
             router.push('/');
         }
     }, [user, authLoading, router]);
 
-    // Fetch full details for favorited wallpapers
     const { data: favoriteWallpapers = [], isLoading: wallpapersLoading } = useQuery({
         queryKey: ['favoriteWallpapers', favoriteIds],
         queryFn: () => getWallpapersByIds(favoriteIds),
         enabled: !!user && favoriteIds.length > 0,
         placeholderData: (previousData) => previousData,
-        staleTime: 5 * 60 * 1000,
+        staleTime: STALE_TIME.FAVORITES,
     });
 
     if (authLoading) return <div className="min-h-screen bg-black" />;
 
-    if (!user) return null; // Will redirect via useEffect
+    if (!user) return null;
 
     return (
         <main className="min-h-screen bg-black text-white font-sans relative">

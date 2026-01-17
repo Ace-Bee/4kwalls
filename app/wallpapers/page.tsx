@@ -65,7 +65,7 @@ export default function WallpapersPage() {
         refetch
     } = useInfiniteQuery({
         queryKey: ['wallpapers', 'random'],
-        queryFn: async ({ pageParam = 0 }: { pageParam: number }) => {
+        queryFn: async () => {
             // New Logic: Client-side deduplication handled in utility
             const wallpapers = await fetchUniqueWallpapers(32, viewedIds);
 
@@ -121,7 +121,6 @@ export default function WallpapersPage() {
 
     for (const w of allWallpapers) {
         if (wallpaperMap.has(w.id)) {
-            const existing = wallpaperMap.get(w.id)!;
             // Merge strategy: Keep the highest counts seen so far
             wallpaperMap.set(w.id, {
                 ...w,
