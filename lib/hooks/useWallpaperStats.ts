@@ -8,14 +8,14 @@ interface WallpaperStats {
     fav_count: number;
 }
 
-// ============================================
-// دوال مستقلة لزيادة العدادات
-// ============================================
 
-/**
- * زيادة عداد التحميل في قاعدة البيانات
- * @param wallpaperId معرف الخلفية
- */
+
+
+
+
+
+
+
 export async function incrementDownloadCount(wallpaperId: number): Promise<void> {
     const { error } = await supabase.rpc('increment_download', {
         row_id: wallpaperId,
@@ -26,10 +26,10 @@ export async function incrementDownloadCount(wallpaperId: number): Promise<void>
     }
 }
 
-/**
- * زيادة عداد المفضلة في قاعدة البيانات
- * @param wallpaperId معرف الخلفية
- */
+
+
+
+
 export async function incrementFavoriteCount(wallpaperId: number): Promise<void> {
     const { error } = await supabase.rpc('increment_fav', {
         row_id: wallpaperId,
@@ -40,33 +40,33 @@ export async function incrementFavoriteCount(wallpaperId: number): Promise<void>
     }
 }
 
-// ============================================
-// Hook للتحديث اللحظي
-// ============================================
 
-/**
- * Hook للتحديث اللحظي لإحصائيات الخلفية
- * يستخدم Supabase Realtime للاستماع لتغييرات download_count و fav_count
- */
+
+
+
+
+
+
+
 export function useWallpaperStats(wallpaperId: number, initialStats?: WallpaperStats) {
     const [stats, setStats] = useState<WallpaperStats>({
         download_count: initialStats?.download_count ?? 0,
         fav_count: initialStats?.fav_count ?? 0,
     });
 
-    // تحديث الإحصائيات عند تغير الخلفية
+    
     useEffect(() => {
         if (initialStats) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+            
             setStats({
                 download_count: initialStats.download_count,
                 fav_count: initialStats.fav_count,
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        
     }, [wallpaperId, initialStats?.download_count, initialStats?.fav_count]);
 
-    // الاشتراك في التحديثات اللحظية
+    
     useEffect(() => {
         if (!wallpaperId) return;
 

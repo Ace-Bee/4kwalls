@@ -15,7 +15,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const savedColor = localStorage.getItem('accent-color');
         if (savedColor) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+            
             setAccentColor(savedColor);
         }
     }, []);

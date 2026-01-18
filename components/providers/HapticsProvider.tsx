@@ -24,12 +24,12 @@ export function HapticsProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const stored = localStorage.getItem(STORAGE_KEYS.HAPTICS_ENABLED);
         if (stored !== null) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+            
             setHapticsEnabled(stored === 'true');
         }
         setIsLoaded(true);
 
-        // Check and log support
+        
         if (typeof navigator !== 'undefined') {
             if (!navigator.vibrate) {
                 console.warn('[Haptics] Device/Browser does NOT support vibration API (likely iOS).');
@@ -53,7 +53,7 @@ export function HapticsProvider({ children }: { children: React.ReactNode }) {
     const triggerHaptic = useCallback((type: HapticType) => {
         if (!hapticsEnabled || typeof navigator === 'undefined') return;
 
-        // Debug logging in development
+        
         if (process.env.NODE_ENV === 'development') {
             console.log(`[Haptics] Triggered: ${type}`);
         }
@@ -82,7 +82,7 @@ export function HapticsProvider({ children }: { children: React.ReactNode }) {
                     break;
             }
         } catch (e) {
-            // Ignore errors on devices that don't support it
+            
             console.error('[Haptics] Error:', e);
         }
     }, [hapticsEnabled]);

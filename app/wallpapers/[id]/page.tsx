@@ -10,7 +10,7 @@ import { ShareButton } from '@/components/wallpapers/ShareButton';
 import { Header } from '@/components/common/Header';
 import { FavoriteButton } from '@/components/wallpapers/FavoriteButton';
 
-// Using server component for SEO metadata
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const id = (await params).id;
     const wallpaper = await getWallpaperById(Number(id));
@@ -71,9 +71,9 @@ export default async function WallpaperPage({ params }: { params: Promise<{ id: 
 
             <div className="flex-1 flex flex-col items-center justify-start md:justify-center p-0 md:p-8 animate-in fade-in duration-500">
 
-                {/* Image Container */}
-                {/* Mobile: Taller aspect ratio (2/3), no border/shadow to blend, controls below */}
-                {/* Desktop: standard video aspect, contained, controls overlay */}
+                {}
+                {}
+                {}
                 <div className="relative w-full max-w-6xl aspect-[2/3] md:aspect-video bg-black/50 md:rounded-2xl overflow-hidden md:shadow-2xl md:border md:border-white/10">
                     <Image
                         src={getModalImageUrl(wallpaper.image_url)}
@@ -85,21 +85,21 @@ export default async function WallpaperPage({ params }: { params: Promise<{ id: 
                         unoptimized
                     />
 
-                    {/* Gradient Overlay for Controls - DESKTOP ONLY */}
+                    {}
                     <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
-                    {/* Controls - DESKTOP ONLY (Overlay) */}
+                    {}
                     <div className="hidden md:flex absolute bottom-0 left-0 right-0 p-8 flex-row items-center justify-between gap-4 pointer-events-auto">
                         <ControlsContent wallpaper={wallpaper} />
                     </div>
                 </div>
 
-                {/* Controls - MOBILE ONLY (Below Image) */}
+                {}
                 <div className="md:hidden w-full px-5 py-6 flex flex-col gap-6 bg-black z-10">
                     <ControlsContent wallpaper={wallpaper} isMobile />
                 </div>
 
-                {/* Stats & Details Section */}
+                {}
                 <div className="w-full max-w-6xl px-4 md:px-0 pb-8 md:pb-0 md:mt-8">
                     <WallpaperInfo wallpaper={wallpaper} isVisible={true} position="static" />
                 </div>
@@ -109,7 +109,7 @@ export default async function WallpaperPage({ params }: { params: Promise<{ id: 
     );
 }
 
-// Extracted Helper Component for Controls to avoid duplication
+
 function ControlsContent({ wallpaper, isMobile }: { wallpaper: Wallpaper, isMobile?: boolean }) {
     return (
         <>
@@ -125,7 +125,7 @@ function ControlsContent({ wallpaper, isMobile }: { wallpaper: Wallpaper, isMobi
             </div>
 
             <div className={cn("flex items-center gap-3", isMobile ? "justify-between w-full mt-2" : "")}>
-                {/* Left side actions */}
+                {}
                 <div className="flex items-center gap-3">
                     <FavoriteButton wallpaper={wallpaper} />
 
@@ -137,7 +137,7 @@ function ControlsContent({ wallpaper, isMobile }: { wallpaper: Wallpaper, isMobi
                     />
                 </div>
 
-                {/* Download Action */}
+                {}
                 <DownloadButton
                     wallpaperId={wallpaper.id}
                     imageUrl={wallpaper.image_url}

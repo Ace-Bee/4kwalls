@@ -11,11 +11,11 @@ export function useAuth() {
             const { data: { session } } = await supabase.auth.getSession();
             return session?.user ?? null;
         },
-        staleTime: Infinity, // Auth state rarely changes without explicit action
+        staleTime: Infinity, 
     });
 
     const signInWithOAuth = async (provider: 'google' | 'github') => {
-        // Set flag to show toast after redirect
+        
         sessionStorage.setItem('login_success', 'true');
 
         const { error } = await supabase.auth.signInWithOAuth({
@@ -57,7 +57,7 @@ export function useAuth() {
 
         if (error) throw error;
 
-        // Update user state immediately after verification
+        
         if (data.session) {
             queryClient.setQueryData(['auth', 'user'], data.user);
         }
@@ -67,7 +67,7 @@ export function useAuth() {
     const signOut = async () => {
         await supabase.auth.signOut();
         queryClient.setQueryData(['auth', 'user'], null);
-        queryClient.setQueryData(['favorites'], []); // Clear favorites on logout
+        queryClient.setQueryData(['favorites'], []); 
     };
 
     const updateProfile = async (data: { full_name?: string; avatar_url?: string }) => {
@@ -76,14 +76,14 @@ export function useAuth() {
         if (error) throw error;
 
         if (user) {
-            // Immediately update the cache with the new user object
+            
             queryClient.setQueryData(['auth', 'user'], user);
 
-            // Force a session refresh to ensuring the token in localStorage is updated
+            
             await supabase.auth.refreshSession();
         }
 
-        // Invalidate to be double sure
+        
         queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
     };
 

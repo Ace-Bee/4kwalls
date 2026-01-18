@@ -109,7 +109,7 @@ function Particles({
             setIsRevealing(false);
         }
 
-        // eslint-disable-next-line
+        
         dofPointsMaterial.uniforms.uTime.value = currentTime;
         dofPointsMaterial.uniforms.uFocus.value = focus;
         dofPointsMaterial.uniforms.uBlur.value = aperture;
@@ -122,7 +122,7 @@ function Particles({
             delta
         );
 
-        // eslint-disable-next-line
+        
         simulationMaterial.uniforms.uTime.value = currentTime;
         simulationMaterial.uniforms.uNoiseScale.value = noiseScale;
         simulationMaterial.uniforms.uNoiseIntensity.value = noiseIntensity;

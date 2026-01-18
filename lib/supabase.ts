@@ -28,10 +28,10 @@ export async function getRandomWallpapers(
     limit: number = 12,
     excludeIds: number[] = []
 ): Promise<Wallpaper[]> {
-    // We keep the RPC call as is, but now we expect the caller (client)
-    // to handle the heavy lifting of deduplication if the list is huge.
-    // For small exclude lists, we still pass them to be efficient.
-    const limitedExcludeIds = excludeIds.slice(-500); // Keep existing safety limit
+
+
+
+    const limitedExcludeIds = excludeIds.slice(-500);
 
     const { data, error } = await supabase
         .rpc('get_random_wallpapers', {
@@ -89,7 +89,7 @@ export async function getAllWallpaperIds(): Promise<number[]> {
         .from('wallpapers')
         .select('id')
         .order('id', { ascending: false })
-        .limit(50000); // Reasonable limit for sitemap
+        .limit(50000);
 
     if (error) {
         console.error('Error fetching wallpaper IDs:', error);

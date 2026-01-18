@@ -2,7 +2,7 @@ import { getProxiedImageUrl } from './helpers';
 import { ANIMATION } from '@/lib/constants';
 
 export const handleDownload = async (url: string, filename: string): Promise<void> => {
-    // Use proxied URL through Next.js rewrites (/images/* -> R2)
+    
     const downloadUrl = getProxiedImageUrl(url);
 
     try {

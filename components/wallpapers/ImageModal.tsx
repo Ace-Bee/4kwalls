@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { Info, X } from 'lucide-react';
@@ -21,8 +21,51 @@ interface ImageModalProps {
 
 export function ImageModal({ wallpaper, onClose }: ImageModalProps) {
     const [showInfo, setShowInfo] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight
+            });
+        };
+
+
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     if (!wallpaper) return null;
+
+
+    const isDesktop = windowSize.width >= 768;
+
+    let mobileImageStyle = {};
+    if (!isDesktop && windowSize.width > 0 && wallpaper.width && wallpaper.height) {
+        const screenAspect = windowSize.width / windowSize.height;
+        const imageAspect = wallpaper.width / wallpaper.height;
+
+        if (imageAspect > screenAspect) {
+
+            mobileImageStyle = {
+                height: '100%',
+                width: 'auto',
+                maxWidth: 'none'
+            };
+        } else {
+
+            mobileImageStyle = {
+                width: '100%',
+                height: 'auto',
+                maxHeight: 'none'
+            };
+        }
+    }
 
     return (
         <AnimatePresence onExitComplete={() => setShowInfo(false)}>
@@ -44,7 +87,14 @@ export function ImageModal({ wallpaper, onClose }: ImageModalProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        drag="y"
+
+
+
+
+
+
+
+                        drag={isDesktop ? "y" : false}
                         dragConstraints={{ top: 0, bottom: 0 }}
                         dragElastic={{ top: 0.8, bottom: 0.8 }}
                         onDragEnd={(e, { offset, velocity }) => {
@@ -63,34 +113,53 @@ export function ImageModal({ wallpaper, onClose }: ImageModalProps) {
                         <button
                             onClick={onClose}
                             className={cn(
-                                "absolute top-4 left-4 md:-top-12 md:-right-12 md:left-auto md:right-2",
-                                "h-10 w-10 flex items-center justify-center rounded-full",
+                                "hidden md:flex absolute md:-top-12 md:-right-12 md:left-auto md:right-2 md:bottom-auto",
+                                "h-14 w-14 md:h-10 md:w-10 items-center justify-center rounded-full",
                                 "bg-white/10 hover:bg-white/20 active:bg-white/30 backdrop-blur-md",
                                 "border border-white/20 text-white/70 hover:text-white",
                                 "transition-all duration-300 z-50 shadow-lg"
                             )}
                         >
-                            <X size={24} className="md:hidden" />
                             <X size={20} className="hidden md:block" />
                         </button>
 
                         <div className={cn(
                             "relative w-full flex-1 md:flex-none md:h-full rounded-b-3xl md:rounded-2xl overflow-hidden",
-                            "shadow-2xl bg-black/50 border-b border-white/10 md:border md:border-white/10"
+                            "shadow-2xl bg-black border-b border-white/10 md:border md:border-white/10"
                         )}>
                             <DoubleTapLikeOverlay
                                 wallpaper={wallpaper}
-                                className="w-full h-full flex items-center justify-center p-4 md:p-10"
+                                className="w-full h-full flex items-center justify-center bg-black"
                             >
-                                <Image
-                                    src={getModalImageUrl(wallpaper.image_url)}
-                                    alt={wallpaper.name}
-                                    fill
-                                    className="object-contain drop-shadow-2xl"
-                                    sizes="100vw"
-                                    priority
-                                    unoptimized
-                                />
+                                <div
+                                    ref={containerRef}
+                                    className="w-full h-full flex items-center justify-center relative overflow-hidden"
+                                >
+                                    <motion.img
+                                        src={getModalImageUrl(wallpaper.image_url)}
+                                        alt={wallpaper.name}
+                                        drag={!isDesktop}
+                                        dragConstraints={containerRef}
+                                        dragElastic={0.2}
+                                        whileDrag={{ cursor: "grabbing" }}
+                                        onDragEnd={(e, { offset, velocity }) => {
+                                            if (!isDesktop) {
+                                                const swipeThreshold = 150;
+                                                const velocityThreshold = 200;
+
+                                                if (Math.abs(offset.y) > swipeThreshold || Math.abs(velocity.y) > velocityThreshold) {
+                                                    onClose();
+                                                }
+                                            }
+                                        }}
+                                        className={cn(
+                                            "drop-shadow-2xl",
+                                            isDesktop ? "w-full h-full object-contain" : ""
+                                        )}
+                                        style={!isDesktop ? mobileImageStyle : {}}
+                                        draggable={false}
+                                    />
+                                </div>
                             </DoubleTapLikeOverlay>
 
                             <div className="hidden md:flex absolute top-4 left-4 flex-wrap gap-2 z-20">
@@ -107,6 +176,7 @@ export function ImageModal({ wallpaper, onClose }: ImageModalProps) {
                                 wallpaper={wallpaper}
                                 showInfo={showInfo}
                                 setShowInfo={setShowInfo}
+                                onClose={onClose}
                                 isMobile
                             />
                         </div>
@@ -121,10 +191,11 @@ interface ModalControlsProps {
     wallpaper: Wallpaper;
     showInfo: boolean;
     setShowInfo: (show: boolean) => void;
+    onClose?: () => void;
     isMobile?: boolean;
 }
 
-function ModalControls({ wallpaper, showInfo, setShowInfo, isMobile }: ModalControlsProps) {
+function ModalControls({ wallpaper, showInfo, setShowInfo, onClose, isMobile }: ModalControlsProps) {
     const btnBase = "flex items-center justify-center rounded-full transition-all";
     const iconBtnClass = cn(btnBase, isMobile ? "h-11 w-11" : "h-10 w-10");
 
@@ -176,6 +247,19 @@ function ModalControls({ wallpaper, showInfo, setShowInfo, isMobile }: ModalCont
                 imageAlt={wallpaper.name}
                 className={iconBtnClass}
             />
+
+            {isMobile && onClose && (
+                <button
+                    onClick={onClose}
+                    className={cn(
+                        glassIcon(),
+                        iconBtnClass,
+                        'text-white hover:text-red-500 hover:bg-red-500/10'
+                    )}
+                >
+                    <X size={24} />
+                </button>
+            )}
         </div>
     );
 }

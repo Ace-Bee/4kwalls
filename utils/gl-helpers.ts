@@ -1,11 +1,11 @@
 
 import * as THREE from 'three';
 
-// ============================================================================
-// 1. UTILS (Periodic Noise)
-// ============================================================================
 
-export const periodicNoiseGLSL = /* glsl */ `
+
+
+
+export const periodicNoiseGLSL =  `
   // Periodic noise function using sine and cosine waves
   float periodicNoise(vec3 p, float time) {
     // Create multiple frequency components for more complex movement
@@ -28,11 +28,11 @@ export const periodicNoiseGLSL = /* glsl */ `
   }
 `;
 
-// ============================================================================
-// 2. SIMULATION MATERIAL
-// ============================================================================
 
-// Function to generate equally distributed points on a plane
+
+
+
+
 function getPlane(count: number, components: number, size: number = 512, scale: number = 1.0) {
     const length = count * components
     const data = new Float32Array(length)
@@ -40,15 +40,15 @@ function getPlane(count: number, components: number, size: number = 512, scale: 
     for (let i = 0; i < count; i++) {
         const i4 = i * components
 
-        // Calculate grid position
-        const x = (i % size) / (size - 1) // Normalize to [0, 1]
-        const z = Math.floor(i / size) / (size - 1) // Normalize to [0, 1]
+        
+        const x = (i % size) / (size - 1) 
+        const z = Math.floor(i / size) / (size - 1) 
 
-        // Convert to centered coordinates [-0.5, 0.5] and apply scale
-        data[i4 + 0] = (x - 0.5) * 2 * scale // X position: scaled range
-        data[i4 + 1] = 0 // Y position: flat plane at y=0
-        data[i4 + 2] = (z - 0.5) * 2 * scale // Z position: scaled range
-        data[i4 + 3] = 1.0 // W component (for RGBA texture)
+        
+        data[i4 + 0] = (x - 0.5) * 2 * scale 
+        data[i4 + 1] = 0 
+        data[i4 + 2] = (z - 0.5) * 2 * scale 
+        data[i4 + 3] = 1.0 
     }
 
     return data
@@ -60,12 +60,12 @@ export class SimulationMaterial extends THREE.ShaderMaterial {
         positionsTexture.needsUpdate = true
 
         super({
-            vertexShader: /* glsl */`varying vec2 vUv;
+            vertexShader: `varying vec2 vUv;
       void main() {
         vUv = uv;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }`,
-            fragmentShader: /* glsl */`uniform sampler2D positions;
+            fragmentShader: `uniform sampler2D positions;
       uniform float uTime;
       uniform float uNoiseScale;
       uniform float uNoiseIntensity;
@@ -109,14 +109,14 @@ export class SimulationMaterial extends THREE.ShaderMaterial {
     }
 }
 
-// ============================================================================
-// 3. POINT MATERIAL
-// ============================================================================
+
+
+
 
 export class DofPointsMaterial extends THREE.ShaderMaterial {
     constructor() {
         super({
-            vertexShader: /* glsl */ `
+            vertexShader:  `
       uniform sampler2D positions;
       uniform sampler2D initialPositions;
       uniform float uTime;
@@ -139,7 +139,7 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
         vInitialPosition = initialPos;
         gl_PointSize = max(vDistance * uBlur * uPointSize, 3.0);
       }`,
-            fragmentShader: /* glsl */ `
+            fragmentShader:  `
       uniform float uOpacity;
       uniform float uRevealFactor;
       uniform float uRevealProgress;
@@ -243,30 +243,30 @@ export class DofPointsMaterial extends THREE.ShaderMaterial {
                 uRevealProgress: { value: 0.0 }
             },
             transparent: true,
-            // blending: THREE.AdditiveBlending,
+            
             depthWrite: false
         })
     }
 }
 
-// ============================================================================
-// 4. VIGNETTE SHADER
-// ============================================================================
+
+
+
 
 export const VignetteShader = {
     uniforms: {
-        tDiffuse: { value: null }, // provided by ShaderPass
-        darkness: { value: 1.0 }, // strength of the vignette effect
-        offset: { value: 1.0 }, // vignette offset
+        tDiffuse: { value: null }, 
+        darkness: { value: 1.0 }, 
+        offset: { value: 1.0 }, 
     },
-    vertexShader: /* glsl */`
+    vertexShader: `
     varying vec2 vUv;
     void main() {
       vUv = uv;
       gl_Position = vec4(position, 1.0);
     }
   `,
-    fragmentShader: /* glsl */`
+    fragmentShader: `
     uniform sampler2D tDiffuse;
     uniform float darkness;
     uniform float offset;

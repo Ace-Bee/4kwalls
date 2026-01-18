@@ -21,11 +21,11 @@ export function GraphicsProvider({ children }: { children: React.ReactNode }) {
         const storedReduceBlur = localStorage.getItem('graphics_reduceBlur');
 
         if (storedShowBg !== null) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+            
             setShowBackground(storedShowBg === 'true');
         }
         if (storedReduceBlur !== null) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
+            
             setReduceBlur(storedReduceBlur === 'true');
         }
         setIsLoaded(true);

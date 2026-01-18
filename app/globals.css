@@ -2,9 +2,9 @@
 
 @layer components {
 
-  /* Disable glass effects when low-graphics mode is on */
+  
 
-  /* 1. Target generic backdrop utils */
+  
   body.low-graphics .backdrop-blur-md,
   body.low-graphics .backdrop-blur-sm,
   body.low-graphics .backdrop-blur,
@@ -12,20 +12,20 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     background-color: #09090b !important;
-    /* Solid Zinc-950 */
+    
     border-color: rgba(255, 255, 255, 0.1) !important;
     box-shadow: none !important;
   }
 
-  /* 2. Target specific glass helper classes (even if they use different utilities) */
-  /* Sidebar & Header Navs */
+  
+  
   body.low-graphics nav[class*="backdrop-blur"],
   body.low-graphics div[class*="backdrop-blur"] {
     background-color: #09090b !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 
-  /* 3. Button specific overrides (Glass Buttons) */
+  
   body.low-graphics button[class*="backdrop-blur"],
   body.low-graphics a[class*="backdrop-blur"] {
     background-color: #09090b !important;
@@ -35,31 +35,31 @@
   body.low-graphics button[class*="backdrop-blur"]:hover,
   body.low-graphics a[class*="backdrop-blur"]:hover {
     background-color: #27272a !important;
-    /* Zinc-800 on hover */
+    
   }
 
-  /* 4. Active state override */
+  
   body.low-graphics .bg-white\/10 {
     background-color: #27272a !important;
-    /* Make active tabs solid zinc-800 */
+    
   }
 
-  /* 5. Sidebar icons - make them brighter in low-graphics mode */
+  
   body.low-graphics nav .text-gray-300 {
     color: #e4e4e7 !important;
-    /* Zinc-200 - more visible */
+    
   }
 
   body.low-graphics nav .text-gray-300:hover {
     color: #ffffff !important;
   }
 
-  /* 6. Fix active sidebar icons - white bg/black text looks bad without blur */
+  
   body.low-graphics nav .bg-white.text-black {
     background-color: #22d3ee !important;
-    /* Cyan-400 - accented */
+    
     color: #09090b !important;
-    /* Keep dark text for contrast */
+    
   }
 }
 
@@ -91,19 +91,19 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ============================================ */
-/* Mobile Navigation Support */
-/* ============================================ */
 
-/* Safe area inset for iPhone notch/home indicator */
+
+
+
+
 .safe-area-inset-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Add bottom padding to main content when bottom nav is visible */
+
 @media (max-width: 767px) {
   main {
     padding-bottom: 80px;
-    /* Height of bottom nav */
+    
   }
 }

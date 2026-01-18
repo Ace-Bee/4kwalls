@@ -8,8 +8,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export async function deleteAccount(accessToken: string) {
     try {
-        // 1. Verify the user using the access token
-        // We create a temporary client just to verify the token
+        
+        
         const supabase = createClient(supabaseUrl, supabaseAnonKey, {
             auth: {
                 autoRefreshToken: false,
@@ -26,7 +26,7 @@ export async function deleteAccount(accessToken: string) {
 
         console.log(`SERVER ACTION: Deleting user ${user.id}`);
 
-        // 2. Safety Step: Explicitly remove favorites (though cascade might handle it, this is requested)
+        
         const { error: deleteFavError } = await supabaseAdmin
             .from('user_favorites')
             .delete()
@@ -34,10 +34,10 @@ export async function deleteAccount(accessToken: string) {
 
         if (deleteFavError) {
             console.error('SERVER ACTION: Failed to delete favorites:', deleteFavError);
-            // We continue to try to delete the user anyway
+            
         }
 
-        // 3. Delete the user from Auth (This wipes everything if cascaded properly)
+        
         const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 
         if (deleteUserError) {

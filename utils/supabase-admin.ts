@@ -7,7 +7,7 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
     throw new Error('Missing Supabase URL or Service Role Key');
 }
 
-// Note: This client has admin privileges. Use with caution.
+
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: {
         autoRefreshToken: false,
